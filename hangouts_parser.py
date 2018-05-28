@@ -22,9 +22,9 @@ class HangoutsParser:
             # Read the Hangouts JSON file and turn into objects
             data = json.load(data_file, object_hook=lambda d: Namespace(**d))
             # Iterate through each conversation in the list
-            for conversation_state in data.conversation_state:
+            for conversation_state in data.conversations:
                 # Get the nested conversation_state
-                state = getattr(conversation_state, "conversation_state", None)
+                state = getattr(conversation_state, "conversation", None)
                 if state is not None:
                     # Get the conversation object
                     conversation = getattr(state, "conversation", None)
@@ -54,7 +54,7 @@ class HangoutsParser:
                                                                                        read_state, user_phone_number,
                                                                                        self_gaia_id)
                     # Get the conversation messages
-                    events = getattr(state, "event", None)
+                    events = getattr(conversation_state, "events", None)
                     if events is not None:
                         current_conversation.messages = self._process_messages(events)
                     conversations.append(current_conversation)
